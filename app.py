@@ -1,51 +1,56 @@
 import streamlit as st
-from cryptography.fernet import Fernet
-from PIL import Image
-import io
+import base64
 
-# -----------------------------
-# 🔐 ENCRYPTED TOKEN SECTION
-# -----------------------------
-ENCRYPTED_TOKEN = b'gAAAAABmAegTLH6-s6Hk5NjHtCG6ZNi35vv0mhgXKTyE21bBmvWVLUyGjLvz7mvnQF6lvNexV0yy4s6x2c_jgZAg0kOIFv5ZDAyKnIWq4GXi7tzX7Zpu4tk='
-FERNET_KEY = b'N1N3FtvMfDdv20dAr9l2gWnEwJEr8ADJ1e_RH4DFe8g='
-
-try:
-    decrypted_token = Fernet(FERNET_KEY).decrypt(ENCRYPTED_TOKEN).decode()
-except Exception as e:
-    st.error("❌ Failed to decrypt token.")
-    st.stop()
-
-# -----------------------------
-# 📤 Upload + View Media
-# -----------------------------
-st.set_page_config(page_title="📂 Media Uploader", layout="centered")
-st.title("🖼️ Upload + Preview Media")
-st.caption("Supports: JPG, PNG, SVG, GIF, MP4, MOV, WebM")
-
-file = st.file_uploader("🎯 Drop your file here", type=["jpg", "jpeg", "png", "gif", "svg", "mp4", "webm", "mov"])
-
-if file:
-    file_type = file.type
-    content = file.read()
-
-    st.subheader("👀 Preview:")
-
-    if "image" in file_type:
-        if file_type == "image/svg+xml":
-            svg = content.decode("utf-8")
-            st.components.v1.html(svg, height=400)
+# Simple Caesar cipher encrypt/decrypt for token (shift 3 for example)
+def encrypt(text, shift=3):
+    result = ""
+    for char in text:
+        if char.isalpha():
+            offset = 65 if char.isupper() else 97
+            result += chr((ord(char) - offset + shift) % 26 + offset)
         else:
-            img = Image.open(io.BytesIO(content))
-            st.image(img, use_column_width=True)
+            result += char
+    return result
 
-    elif "video" in file_type:
-        st.video(content)
+def decrypt(text, shift=3):
+    return encrypt(text, -shift)
 
-    else:
-        st.warning("⚠️ Unsupported file type")
+# Your GitHub token (encrypted here, replace with your actual token encrypted!)
+# Example: 'ghp_1234567890abcdef' encrypted with shift 3
+encrypted_token = "lnymzg_ufy_11GGT6RVV0TeMmRXFEijJx_Wr0IJOWzdcjnAV5FL2e9YNY9zIOwvycvhdimJVjzrgRLX5VJNHHTltH9KWQ"
 
-# -----------------------------
-# (Optional) Show decrypted token (for dev only)
-# -----------------------------
-with st.expander("🔐 Show decrypted token (for debugging)", expanded=False):
-    st.code(decrypted_token, language="text")
+# Decrypt the token to use internally
+GITHUB_TOKEN = decrypt(encrypted_token, 3)
+
+st.title("Encrypted Token Media Uploader 🔐📤")
+
+# Show a message about token usage
+st.write("Using an encrypted GitHub token (decrypted internally).")
+
+# File uploader that accepts multiple file types including images, video, svg, webp
+uploaded_files = st.file_uploader(
+    "Upload images, videos, SVG, WebP, or other files",
+    accept_multiple_files=True,
+    type=["png", "jpg", "jpeg", "gif", "mp4", "svg", "webp", "mov", "avi", "mkv", "bmp", "tiff"],
+)
+
+if uploaded_files:
+    st.write(f"Uploaded {len(uploaded_files)} file(s):")
+    for uploaded_file in uploaded_files:
+        file_details = {
+            "filename": uploaded_file.name,
+            "filetype": uploaded_file.type,
+            "filesize": uploaded_file.size,
+        }
+        st.write(file_details)
+
+        # Show images & videos inline if possible
+        if uploaded_file.type.startswith("image/"):
+            st.image(uploaded_file)
+        elif uploaded_file.type.startswith("video/"):
+            st.video(uploaded_file)
+        else:
+            st.write("Preview not supported for this file type.")
+
+# Dummy: You can add your GitHub API usage here using GITHUB_TOKEN if you want to upload the files to a repo or gist.
+
