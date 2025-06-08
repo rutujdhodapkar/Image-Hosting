@@ -1,9 +1,10 @@
 import streamlit as st
-import base64
 import requests
+import base64
+from datetime import datetime
 
-# Caesar cipher encrypt/decrypt for token (shift 3)
-def encrypt(text, shift=3):
+# -------------- 🔐 DECRYPT TOKEN FUNCTION ------------------
+def encrypt(text, shift):
     result = ""
     for char in text:
         if char.isalpha():
@@ -13,84 +14,77 @@ def encrypt(text, shift=3):
             result += char
     return result
 
-def decrypt(text, shift=3):
-    return encrypt(text, -shift)
+def decrypt(cipher_text, shift):
+    return encrypt(cipher_text, -shift)
 
-# Replace this with your encrypted GitHub token (shift 3)
-encrypted_token = "lnymzg_ufy_11GGT6RVV0TeMmRXFEijJx_Wr0IJOWzdcjnAV5FL2e9YNY9zIOwvycvhdimJVjzrgRLX5VJNHHTltH9KWQ"  # <-- Put your actual encrypted token here!
-GITHUB_TOKEN = decrypt(encrypted_token, 3)
+# Encrypted GitHub token (Caesar +5)
+encrypted_token = "lnymzg_ufy_11GGT6RVV0TeMmRXFEijJx_Wr0IJOWzdcjnAV5FL2e9YNY9zIOwvycvhdimJVjzrgRLX5VJNHHTltH9KWQ"
+GITHUB_TOKEN = decrypt(encrypted_token, 5)
 
-# Repo details locked
-GITHUB_USER = "rutujdhodapkar"
-REPO_NAME = "Image-Hosting"
+# Repo Info
+OWNER = "rutujdhodapkar"
+REPO = "Image-Hosting"
 BRANCH = "main"
+UPLOAD_PATH = ""  # root folder in repo
 
+# ----------------- 🔼 FILE UPLOADER -----------------------
 st.set_page_config(layout="wide")
-st.title("Upload Images to rutujdhodapkar/Image-Hosting Repo 🔥")
+st.markdown("## 🖼️ GitHub Image/Asset Hosting")
 
-# Upload button top-right
-_, upload_col = st.columns([9, 1])
-with upload_col:
-    uploaded_files = st.file_uploader(
-        "Upload",
-        accept_multiple_files=True,
-        type=["png", "jpg", "jpeg", "gif", "svg", "webp", "bmp", "tiff"],
-        key="file_uploader",
-    )
-
-if 'upload_results' not in st.session_state:
-    st.session_state.upload_results = []
-
-def upload_file_to_github(file, path_in_repo):
-    url = f"https://api.github.com/repos/{GITHUB_USER}/{REPO_NAME}/contents/{path_in_repo}"
-
-    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-    # Check if file exists to get SHA
-    get_resp = requests.get(url, headers=headers)
-    sha = None
-    if get_resp.status_code == 200:
-        sha = get_resp.json().get("sha")
-
-    content = file.read()
-    b64_content = base64.b64encode(content).decode()
-
-    message = f"Upload {file.name} via Streamlit app"
-
-    data = {
-        "message": message,
-        "content": b64_content,
-        "branch": BRANCH,
-    }
-    if sha:
-        data["sha"] = sha
-
-    resp = requests.put(url, headers=headers, json=data)
-    if resp.status_code in [200, 201]:
-        return True, f"Uploaded {file.name} successfully."
-    else:
-        return False, f"Failed to upload {file.name}: {resp.text}"
+with st.sidebar:
+    st.markdown("### Upload")
+    uploaded_files = st.file_uploader("Upload files", accept_multiple_files=True)
 
 if uploaded_files:
-    st.session_state.upload_results = []
     for file in uploaded_files:
-        # Upload to uploads/ folder inside repo
-        path_in_repo = f"uploads/{file.name}"
-        success, msg = upload_file_to_github(file, path_in_repo)
-        st.session_state.upload_results.append(msg)
+        content = file.read()
+        file_name = file.name
+        upload_url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{UPLOAD_PATH}{file_name}"
+        encoded_content = base64.b64encode(content).decode()
 
-for result in st.session_state.upload_results:
-    st.write(result)
+        data = {
+            "message": f"Upload {file_name} via Streamlit",
+            "content": encoded_content,
+            "branch": BRANCH
+        }
 
-# Show grid preview for uploaded images/videos
-if uploaded_files:
-    st.write(f"Uploaded {len(uploaded_files)} file(s):")
+        headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+        res = requests.put(upload_url, json=data, headers=headers)
+
+        if res.status_code in [200, 201]:
+            st.success(f"✅ Uploaded `{file_name}`")
+        else:
+            st.error(f"❌ Failed to upload `{file_name}`: {res.json().get('message')}")
+            st.code(res.text)
+
+# ----------------- 📸 SHOW FILES --------------------------
+
+# Get list of files from repo root
+def list_files():
+    api_url = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{UPLOAD_PATH}?ref={BRANCH}"
+    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+    res = requests.get(api_url, headers=headers)
+
+    if res.status_code == 200:
+        return res.json()
+    else:
+        st.error("Failed to fetch file list.")
+        st.code(res.text)
+        return []
+
+files = list_files()
+if files:
+    st.markdown("### 🗂️ Files in Repo")
     cols = st.columns(5)
-    for idx, file in enumerate(uploaded_files):
-        col = cols[idx % 5]
-        with col:
-            if file.type.startswith("image/"):
-                st.image(file, use_column_width=True)
-            else:
-                st.write(f"No preview for {file.name}")
-else:
-    st.write("No images uploaded yet. Use the upload button on top-right 👆")
+    i = 0
+    for file in files:
+        if file["name"].lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".mp4", ".mov", ".webm")):
+            with cols[i % 5]:
+                if file["name"].lower().endswith((".mp4", ".mov", ".webm")):
+                    st.video(file["download_url"])
+                elif file["name"].lower().endswith(".svg"):
+                    svg_html = f'<img src="{file["download_url"]}" width="100%" />'
+                    st.markdown(svg_html, unsafe_allow_html=True)
+                else:
+                    st.image(file["download_url"], use_container_width=True)
+            i += 1
