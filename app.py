@@ -1,5 +1,4 @@
 import streamlit as st
-import base64
 
 # Simple Caesar cipher encrypt/decrypt for token (shift 3 for example)
 def encrypt(text, shift=3):
@@ -15,42 +14,49 @@ def encrypt(text, shift=3):
 def decrypt(text, shift=3):
     return encrypt(text, -shift)
 
-# Your GitHub token (encrypted here, replace with your actual token encrypted!)
-# Example: 'ghp_1234567890abcdef' encrypted with shift 3
+# Encrypted dummy token (replace with your actual encrypted token)
 encrypted_token = "lnymzg_ufy_11GGT6RVV0TeMmRXFEijJx_Wr0IJOWzdcjnAV5FL2e9YNY9zIOwvycvhdimJVjzrgRLX5VJNHHTltH9KWQ"
-
-# Decrypt the token to use internally
 GITHUB_TOKEN = decrypt(encrypted_token, 3)
+
+st.set_page_config(layout="wide")  # Wide layout to fit grid nicely
 
 st.title("Encrypted Token Media Uploader 🔐📤")
 
-# Show a message about token usage
-st.write("Using an encrypted GitHub token (decrypted internally).")
+# Top bar with upload button on right
+upload_col1, upload_col2 = st.columns([9, 1])
+with upload_col2:
+    uploaded_files = st.file_uploader(
+        "Upload",
+        accept_multiple_files=True,
+        type=["png", "jpg", "jpeg", "gif", "mp4", "svg", "webp", "mov", "avi", "mkv", "bmp", "tiff"],
+        key="file_uploader",
+    )
 
-# File uploader that accepts multiple file types including images, video, svg, webp
-uploaded_files = st.file_uploader(
-    "Upload images, videos, SVG, WebP, or other files",
-    accept_multiple_files=True,
-    type=["png", "jpg", "jpeg", "gif", "mp4", "svg", "webp", "mov", "avi", "mkv", "bmp", "tiff"],
-)
+# Container for media grid
+if 'media_list' not in st.session_state:
+    st.session_state.media_list = []
 
 if uploaded_files:
-    st.write(f"Uploaded {len(uploaded_files)} file(s):")
-    for uploaded_file in uploaded_files:
-        file_details = {
-            "filename": uploaded_file.name,
-            "filetype": uploaded_file.type,
-            "filesize": uploaded_file.size,
-        }
-        st.write(file_details)
+    st.session_state.media_list.extend(uploaded_files)
 
-        # Show images & videos inline if possible
-        if uploaded_file.type.startswith("image/"):
-            st.image(uploaded_file)
-        elif uploaded_file.type.startswith("video/"):
-            st.video(uploaded_file)
-        else:
-            st.write("Preview not supported for this file type.")
+media_list = st.session_state.media_list
 
-# Dummy: You can add your GitHub API usage here using GITHUB_TOKEN if you want to upload the files to a repo or gist.
+if media_list:
+    st.write(f"Showing {len(media_list)} uploaded file(s):")
+
+    # Display in grid 5 per row
+    cols = st.columns(5)
+    for idx, file in enumerate(media_list):
+        col = cols[idx % 5]
+        with col:
+            st.markdown(f"**{file.name}**")
+            if file.type.startswith("image/"):
+                st.image(file, use_column_width=True)
+            elif file.type.startswith("video/"):
+                st.video(file)
+            else:
+                st.write("No preview")
+
+else:
+    st.write("No media uploaded yet. Use the upload button on top-right 👆")
 
