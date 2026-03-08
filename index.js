@@ -21,7 +21,7 @@ async function run(){
 
 const cpu = await si.cpu()
 const mem = await si.mem()
-const disk = await si.fsSize()
+const disks = await si.fsSize()
 const net = await si.networkInterfaces()
 
 const data = {
@@ -31,9 +31,10 @@ platform: os.platform(),
 cpu: cpu.manufacturer + " " + cpu.brand,
 cpu_cores: cpu.cores,
 ram_gb: (mem.total/1073741824).toFixed(2),
-disks: disk,
+disks: disks,
 network: net,
-boot_time: new Date(Date.now()-os.uptime()*1000)
+boot_time: new Date(Date.now()-os.uptime()*1000),
+time: new Date()
 }
 
 try{
@@ -68,7 +69,7 @@ async function run(){
 
 const cpu = await si.cpu()
 const mem = await si.mem()
-const disk = await si.fsSize()
+const disks = await si.fsSize()
 const net = await si.networkInterfaces()
 
 const data = {
@@ -78,9 +79,10 @@ platform: os.platform(),
 cpu: cpu.manufacturer + " " + cpu.brand,
 cpu_cores: cpu.cores,
 ram_gb: (mem.total/1073741824).toFixed(2),
-disks: disk,
+disks: disks,
 network: net,
-boot_time: new Date(Date.now()-os.uptime()*1000)
+boot_time: new Date(Date.now()-os.uptime()*1000),
+time: new Date()
 }
 
 try{
