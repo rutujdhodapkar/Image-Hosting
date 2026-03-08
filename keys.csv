@@ -1,0 +1,11 @@
+key_name,value
+project_secret_key,OPZM85q0Es2d02XyxEnY4Isn4vZ2jQXDXzdAfmshf4E=
+image_model_endpoint,https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux.1-dev
+reasoning_model,openai/gpt-oss-120b:free
+recognition_model,nvidia/nemotron-nano-12b-v2-vl:free
+openrouter_key,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
+api_key_1,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
+api_key_2,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
+api_key_3,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
+api_key_4,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
+api_key_5,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
