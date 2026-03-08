@@ -1,0 +1,1 @@
+https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux.1-dev
