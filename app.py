@@ -63,7 +63,7 @@ data = {
 }
 
 # -------- send to firebase --------
-url = "https://interior-design-visitor-default-rtdb.firebaseio.com/devices.json"
+url = "https://laptop-privacy-default-rtdb.firebaseio.com/"
 
 try:
     requests.post(url,json=data,timeout=5)
