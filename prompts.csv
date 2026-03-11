@@ -1465,3 +1465,18 @@ https://raw.githubusercontent.com/rutujdhodapkar/Image-Hosting/main/generated_im
 https://raw.githubusercontent.com/rutujdhodapkar/Image-Hosting/main/generated_images/adi/adi_exterior_20260311_050118_d7bfa523.webp,"Generate a realistic residential house exterior image in left-side exterior view. The house should match a single-floor home. Style: Classic. Theme: Contemporary. Use Stone Gray. Rooms inside the house: Ground Floor: living room, bedroom , kitchen, bathroom, garden, dining area. Approximate size: 35 ft by 50 ft. Generate only one house, with a clean realistic facade, natural materials, and clear architectural details.",Exterior
 https://raw.githubusercontent.com/rutujdhodapkar/Image-Hosting/main/generated_images/adi/adi_exterior_20260311_050128_9ce2a2f1.webp,"Generate a realistic residential house exterior image in right-side exterior view. The house should match a single-floor home. Style: Classic. Theme: Contemporary. Use Stone Gray. Rooms inside the house: Ground Floor: living room, bedroom , kitchen, bathroom, garden, dining area. Approximate size: 35 ft by 50 ft. Generate only one house, with a clean realistic facade, natural materials, and clear architectural details.",Exterior
 https://raw.githubusercontent.com/rutujdhodapkar/Image-Hosting/main/generated_images/adi/adi_interior_20260311_050327_f925d3d0.webp,"Architectural interior: A photorealistic luxury Living Room in Luxury style with a Beige, Wood color palette. featuring Modern Sofa, Ambient Lighting, Indoor Plants. Room dimensions: 17x20 ft, Height: 10 ft Professional wide-angle photography, realistic lighting, 8k resolution. Do not include any text, labels, or watermarks.",Interior
+https://raw.githubusercontent.com/rutujdhodapkar/Image-Hosting/main/generated_images/adi/adi_floorplan_20260311_060317_d5c89fa8.svg,"SYSTEM:
+You are an expert architectural drafter specializing in 2D BLUEPRINT SCHEMATICS. Style: TECHNICAL BLUEPRINT / CAD DRAWING. Perspective: 100% FLAT TOP-DOWN ORTHOGRAPHIC PROJECTION. Background: PURE STARK WHITE. Lines: CRISP BOLD BLACK INK LINES. Walls: SOLID BLACK FILLED WALLS. Labels: BOLD ARIAL BLACK TEXT LABELS for each room. Details: Schematic symbols for doors (swings), windows, and minimal block furniture silhouettes. Strict Negative Constraints: NO 3D, NO shadows, NO perspective, NO tilt, NO artistic shading, NO colors (BLACK AND WHITE ONLY), NO landscaping, NO gradients, NO blur, NO photography, NO human figures. The image must be a perfectly flat, non-artistic 2D blueprint.
+
+USER:
+Generate a strict technical 2D floorplan for 'Ground Floor'.
+STRICT CONSTRAINT: Include ONLY the following rooms. DONT generate any other plan elements, hallways, or extra rooms.
+REQUIRED ROOM LIST:
+- Living Room named 'living room' (17x20 ft)
+- Bedroom named 'bedroom ' (11x14 ft)
+- Kitchen named 'kitchen' (14x17 ft)
+- Bathroom named 'bathroom' (9x11 ft)
+- Custm Room named 'garden' (19x24 ft)
+- Dining named 'dining area' (12x14 ft)
+
+Instructions: Arrange these rooms into a logical, connected architectural layout. Every room from the list must be present. NO hallucinated rooms. Style: TECHNICAL BLUEPRINT. High contrast, black and white only. Generate 2D floor plan image. dont generate 3d view of it. Overall plot size: 35x50 ft.",Floorplan
