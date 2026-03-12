@@ -1663,3 +1663,13 @@ You are an expert architectural drafter specializing in 2D BLUEPRINT SCHEMATICS.
 
 USER:
 Generate a blank but proper 2D architectural plan shell with exterior boundary only. Keep it top-down, technical, and on a white background.",Floorplan
+https://raw.githubusercontent.com/rutujdhodapkar/Image-Hosting/main/generated_images/rutuj_dhodapkar/rutuj_dhodapkar_floorplan_20260312_222604_f1585e16.svg,"SYSTEM:
+You are an expert architectural drafter specializing in 2D BLUEPRINT SCHEMATICS. Style: TECHNICAL BLUEPRINT / CAD DRAWING. Perspective: 100% FLAT TOP-DOWN ORTHOGRAPHIC PROJECTION. Background: PURE STARK WHITE. Lines: CRISP BOLD BLACK INK LINES. Walls: SOLID BLACK FILLED WALLS. Labels: BOLD ARIAL BLACK TEXT LABELS for each room. Details: Schematic symbols for doors (swings), windows, and minimal block furniture silhouettes. Strict Negative Constraints: NO 3D, NO shadows, NO perspective, NO tilt, NO artistic shading, NO colors (BLACK AND WHITE ONLY), NO landscaping, NO gradients, NO blur, NO photography, NO human figures. The image must be a perfectly flat, non-artistic 2D blueprint.
+
+USER:
+Generate a strict technical 2D floorplan for 'Ground Floor'.
+STRICT CONSTRAINT: Include ONLY the following rooms. DONT generate any other plan elements, hallways, or extra rooms.
+REQUIRED ROOM LIST:
+
+
+Instructions: Arrange these rooms into a logical, connected architectural layout. Every room from the list must be present. NO hallucinated rooms. Style: TECHNICAL BLUEPRINT. High contrast, black and white only. Generate 2D floor plan image. dont generate 3d view of it.",Floorplan
